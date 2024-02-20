@@ -1,3 +1,4 @@
 
 
-1.create basic application
+1.create basic application height width
+2. create alwaysontop functionality

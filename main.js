@@ -1,5 +1,12 @@
-const { app, BrowserWindow , screen } = require('electron/main')
-const path = require('node:path')
+
+
+console.log("mian.js logged...")
+
+const { app, BrowserWindow , screen , ipcMain , clipboard } = require('electron/main')
+const path = require('node:path');
+const url = require('url');
+const ElectronStore = require('electron-store');
+ElectronStore.initRenderer();
 
 const screenSize={
     height:null,
@@ -10,60 +17,75 @@ const screenSize={
 }
 
 async function getScreenSize(){
-     const size = await screen.getPrimaryDisplay().size;
-    console.log("async size==",size);
+     const size =  screen.getPrimaryDisplay().size;
     screenSize.height = size.height;
     screenSize.width = size.width;
-    screenSize.newHeight = Math.floor(size.height * 0.3);
-    screenSize.newWidth = Math.floor(size.width * 0.2);
+    screenSize.newHeight = Math.floor(size.height * 0.5);
+    screenSize.newWidth = Math.floor(size.width * 0.6);
     screenSize.x = screenSize.width - screenSize.newWidth;
-    console.log(screenSize);
 }
 
 async function createWindow () {
-
-    console.log("inside createwindow",screenSize.x)
-
   const win = new BrowserWindow({
     width: screenSize.newWidth,
     height: screenSize.height,
     x:screenSize.x,
     y:0,
+    show:false,
     webPreferences:{
         nodeIntegration:true,
-        contextIsolation:true
+        contextIsolation:false,
+        enableRemoteModule: true
     }
   })
 
-  win.loadFile('index.html');
+win.loadFile('index.html');
+win.once('ready-to-show',()=>{
+    win.show()
+})
 
-//   win.webContents.on('did-finish-load', () => {
-//     const [windowWidth, windowHeight] = win.getContentSize();
-//     console.log(`Window size: ${windowWidth} x ${windowHeight}`);
-//   });
+  //another meothd
+//   win.loadURL(url.format({
+//     pathname:path.join(__dirname,'index.html'),
+//     protocol:'file',
+//     slashes:true
+//   }));
+
+  
+
+  //devtools
+  win.webContents.openDevTools();
+   // Handle the 'toggle-always-on-top' message from the renderer process
+   ipcMain.on('toggle-always-on-top', (event, alwaysOnTop) => {
+    win.setAlwaysOnTop(alwaysOnTop);
+});
+
 }
 
 app.whenReady().then( async () => {
-    //  const size = await screen.getPrimaryDisplay().workAreaSize;
-    //  console.log("windo size----",size);
-    // const newWidth =  await size.width* 0.9;
-    // const newHeight =  await size.height *0.5;
-
-    // console.log("windo size----",size , newHeight , newWidth);
- // createWindow(newHeight, newWidth , 0 , 0);
-//  createWindow();
 await getScreenSize();
 createWindow();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-       // createWindow();
+       createWindow();
     }
   })
 })
+
+
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
 })
+
+ipcMain.on('copy-to-clipboard', (event, data) => {
+    clipboard.writeText(data);
+});
+
+ipcMain.on('paste-from-clipboard', (event) => {
+    const data = clipboard.readText();
+    event.reply('clipboard-data', data);
+});

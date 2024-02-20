@@ -1,19 +1,31 @@
 {
   "name": "clipboard",
   "version": "1.0.0",
-  "description": "",
+  "description": "clipboard application for store copied data",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electronmon ."
+    "startDev": "electronmon .",
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "keywords": [],
-  "author": "",
+  "author": "Ganesh",
   "license": "ISC",
   "devDependencies": {
+    "@electron-forge/cli": "^7.2.0",
+    "@electron-forge/maker-deb": "^7.2.0",
+    "@electron-forge/maker-rpm": "^7.2.0",
+    "@electron-forge/maker-squirrel": "^7.2.0",
+    "@electron-forge/maker-zip": "^7.2.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.2.0",
     "electron": "^28.2.3"
   },
   "dependencies": {
+    "bootstrap": "^5.3.2",
+    "electron-squirrel-startup": "^1.0.0",
+    "electron-store": "^8.1.0",
     "electronmon": "^2.0.2"
   }
 }
