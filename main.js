@@ -20,7 +20,7 @@ async function getScreenSize(){
      const size =  screen.getPrimaryDisplay().size;
     screenSize.height = size.height;
     screenSize.width = size.width;
-    screenSize.newHeight = Math.floor(size.height * 0.5);
+    screenSize.newHeight = Math.floor(size.height * 1);
     screenSize.newWidth = Math.floor(size.width * 0.6);
     screenSize.x = screenSize.width - screenSize.newWidth;
 }

@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./node_modules/@fortawesome/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="./node_modules/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="./index.css">
+   
     <title>Clipboard App</title>
 </head>
 <body>
@@ -27,14 +30,14 @@
     
 
 
-        <div class="border border-dark">
+        <div  id="listContainer">
             <ul id="list" class="list-group">
                 <li>inital list item</li>
             </ul>
         </div>
 
-        <div class="border-dark">
-            <input type="text" id="myInput" placeholder="type anything" class="col-9">
+        <div class="input-group input-group-lg my-3">
+            <input type="text" id="myInput" placeholder="type here" class=" ps-2 col-9">
             <button class="btn btn-secondary" id="addToListBtn">add to list</button>
 
        </div>
@@ -43,6 +46,7 @@
         <button class="btn btn-danger" id="clearData">delete all the data</button>
        
        </div>
+
     
 
 
