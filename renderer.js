@@ -1,6 +1,8 @@
 console.log("renderer 1st line runned..");
 //import { clipboard } from 'electron';
-const { clipboard, ipcRenderer } = require("electron");
+const { clipboard, nativeImage, ipcRenderer } = require("electron");
+const fs = require('fs');
+
 const Store = require("electron-store");
 const store = new Store();
 let data = store.store;
@@ -9,7 +11,6 @@ let data = store.store;
 window.addEventListener("load", () => {
   console.log("windows loadedd...");
   updateList();
-  copyClick();
 });
 
 //update list function
@@ -21,8 +22,12 @@ function updateList() {
     list.removeChild(list.firstChild);
   }
   for (const key in data) {
-    console.log(` displaying---${key}: ${data[key]}`);
-    createList(key, data[key]);
+
+        console.log(` displaying---${key}: ${data[key]}`);
+        createList(key, data[key]);
+
+    
+
   }
 }
 
@@ -38,9 +43,51 @@ function createList(key, data) {
     "text-wrap",
     "position-relative"
   );
-  //item.textContent = data;
-  item.appendChild(document.createTextNode(data));
-  store.set(key, data);
+
+  if(typeof data === "string"){
+    store.set(key, data);
+    item.appendChild(document.createTextNode(data));
+  }
+  else{
+    store.set(key,data);
+    item.appendChild(document.createTextNode(data.name));
+  }
+
+  item.addEventListener("click",()=>{
+    console.log("button clicked.....",data);
+    if(typeof data === "object"){
+        const path = data.path;
+        if(path.endsWith(".png") || path.endsWith(".jpeg")){
+            const img = nativeImage.createFromPath(path);
+            clipboard.writeImage(img);
+        }
+        else{
+            fs.readFile(path,(err,data)=>{
+                if(err){
+                    console.log("can't read file=",err);
+                    return 0;
+                }
+                clipboard.writeBuffer('application/pdf',data);
+                console.log(" file copied.....")
+            })
+        }
+
+    }
+    else{
+        clipboard.writeText(data);
+    }
+
+
+       let d =  document.createElement("div");
+    d.classList.add( "customAlert","alert","alert-success","col-3","text-center","m-0","p-0");
+    d.textContent = 'copied!!!';
+
+   item.appendChild(d);
+  setTimeout(() => {
+    item.removeChild(d);
+  }, 500);
+  })
+
 
   //delete button
   let deleteBtn = document.createElement("button");
@@ -89,33 +136,49 @@ button.addEventListener("click", () => {
 let btn = document.getElementById("showData");
 btn.addEventListener("click", () => {
   let data = store.store;
-  console.log("all data==", data);
+  console.log("-------stored data-----------");
+  console.log(data);
+  console.log("------------------------------");
 });
 
-// Updated copy function
-function copyClick() {
-  // Remove existing click event listeners from list items
-  let nodes = document.getElementById("list").childNodes;
-  nodes.forEach((node) => {
-    if (node.nodeType === 1) {
-      node.removeEventListener("click", handleListItemClick);
-      node.addEventListener("click", handleListItemClick);
+
+
+//----------------------------file-------------------------------------------
+
+
+const fileInput = document.getElementById("fileInput");
+
+fileInput.addEventListener("change",(event)=>{
+
+    console.log(event.target.files);
+    if(event.target.files[0].name.endsWith(".png") || event.target.files[0].name.endsWith(".jpeg")){
+        handleDroppedFiles( Date.now().toString(),event.target.files);
     }
-  });
+    else{
+        console.log("please select correct file format");
+    }
+    
+})
 
-  // New click event handler for list items
-  function handleListItemClick() {
-    console.log("the text is == ", this.childNodes[0].textContent);
-    clipboard.writeText(this.childNodes[0].textContent);
+function handleDroppedFiles( key,files) {
+    // Handle the dropped files as needed
+    for (const file of files) {
+        const fileName = file.name;
+        const filePath = file.path;
 
-   let d =  document.createElement("div");
-   d.classList.add( "customAlert","alert","alert-success","col-3","text-center","m-0","p-0");
-   d.textContent = 'copied!!!';
+        // Store the file information in Electron Store
+        // store.set(key, {
+        //     name: fileName,
+        //     path: filePath
+        // });
+        createList(key,{
+            name: fileName,
+            path: filePath
+        })
 
-   this.appendChild(d);
-  setTimeout(() => {
-    this.removeChild(d);
-  }, 500);
-  }
-
+        // Add your logic to further process the file as needed
+        // For example, you might want to display or read the file content
+        console.log(`File uploaded: ${fileName}`);
+    
+    }
 }

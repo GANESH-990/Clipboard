@@ -58,4 +58,37 @@ li:active{
 
   }
 
-  
+  .uploadBox{
+
+    max-height: 200px;
+    min-height: 200px;
+    max-width: 200px;
+    border: 2px dashed #272525;
+    margin: auto;
+    opacity: 0.4;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .uploadBox:hover{
+    opacity: 1;
+    cursor: pointer;
+    position: relative;
+  }
+
+  #icon{
+    font-size: 48px;
+  }
+
+  input[type='file']{
+
+    height:200px;
+    width:200px;
+    position:absolute;
+    top:0;
+    left:0;
+    opacity:0;
+    cursor:pointer;
+
+  }
