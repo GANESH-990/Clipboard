@@ -11,7 +11,6 @@ body{
 
 
 #listContainer{
-    border: 2px solid red;
     padding: 10px;
     max-height: 50vh;
     overflow-y: auto;
