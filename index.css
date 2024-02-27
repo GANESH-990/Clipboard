@@ -12,7 +12,7 @@ body{
 
 #listContainer{
     padding: 10px;
-    max-height: 50vh;
+    max-height: 35vh;
     overflow-y: auto;
     
 }
@@ -41,6 +41,9 @@ li:active{
     transition: opacity 0.5s ease-in-out;
   }
 
+  #addToListBtn{
+    font-size: 12px;
+  }
   .customAlert{
     position: absolute;
     left: 25%;
@@ -58,13 +61,14 @@ li:active{
   }
 
   .uploadBox{
-
-    max-height: 200px;
-    min-height: 200px;
-    max-width: 200px;
-    border: 2px dashed #272525;
+     font-size: 12px;
+    max-height: 150px;
+    min-height: 150px;
+    max-width: 150px;
+    border: 2px dashed #b62828;
     margin: auto;
     opacity: 0.4;
+    position: relative;
 
     display: flex;
     justify-content: center;
@@ -73,11 +77,10 @@ li:active{
   .uploadBox:hover{
     opacity: 1;
     cursor: pointer;
-    position: relative;
   }
 
   #icon{
-    font-size: 48px;
+    font-size: 24px;
   }
 
   input[type='file']{
@@ -89,5 +92,6 @@ li:active{
     left:0;
     opacity:0;
     cursor:pointer;
+    background-color: #4caf50;
 
   }
