@@ -85,8 +85,8 @@ li:active{
 
   input[type='file']{
 
-    height:200px;
-    width:200px;
+    height:150px;
+    width:150px;
     position:absolute;
     top:0;
     left:0;
